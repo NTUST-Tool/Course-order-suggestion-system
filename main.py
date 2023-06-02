@@ -1,4 +1,3 @@
-#!/home/wsl/.pyenv/versions/3.11.3/envs/yao_dcbot/bin/python
 from aiohttp import ClientSession, TCPConnector
 from asyncio import run, gather
 from aiohttp import ClientSession,TCPConnector
