@@ -23,7 +23,7 @@ async def main(course_list: list[str]):
         restrict = int(x['Restrict2'])
         if all > restrict:
             x['choise_rate'] = round(
-                comb(all-1, restrict-1)/comb(all, restrict), 2)
+                comb(all-1, restrict-1)/comb(all, restrict), 2)*100
         else:
             x['choise_rate'] = 100
     courses.sort(key=lambda x: x['choise_rate'])
