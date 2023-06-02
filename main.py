@@ -33,7 +33,7 @@ async def main(course_list: list[str]):
         'CourseNo',
         'AllStudent',
         'Restrict2',
-        'choice_rate',
+        'choise_rate',
         'CourseTeacher',
         'CourseName']
     table = PrettyTable()
