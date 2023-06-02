@@ -1,6 +1,8 @@
 #!/home/wsl/.pyenv/versions/3.11.3/envs/yao_dcbot/bin/python
 from aiohttp import ClientSession, TCPConnector
 from asyncio import run, gather
+from aiohttp import ClientSession,TCPConnector
+from asyncio import run,gather
 from prettytable import PrettyTable
 from sys import argv
 from re import findall
@@ -31,7 +33,7 @@ async def main(course_list: list[str]):
         'CourseNo',
         'AllStudent',
         'Restrict2',
-        'choise_rate',
+        'choice_rate',
         'CourseTeacher',
         'CourseName']
     table = PrettyTable()
@@ -50,8 +52,9 @@ async def main(course_list: list[str]):
 
 if __name__ == '__main__':
     try:
-        if len(argv) > 1:
-            with open(argv[1], 'r', encoding='utf-8') as f:
+        argc = len(argv)
+        if (not argv[0].startswith('python') and argc > 1) or (argc > 2):
+            with open(argv[-1],'r',encoding='utf-8') as f:
                 s = f.read()
         else:
             print('將志願清單複製到網址貼上後，再複製貼上到這個程式，即可自動分析課表:')
