@@ -1,7 +1,7 @@
 #!/home/wsl/.pyenv/versions/3.11.3/envs/yao_dcbot/bin/python
-from aiohttp import ClientSession
+from aiohttp import ClientSession,TCPConnector
 from asyncio import run,gather
-from prettytable.colortable import ColorTable,Themes
+from prettytable import PrettyTable
 from sys import argv
 from re import findall
 async def get_course_status(session:ClientSession,course:str):
@@ -11,10 +11,7 @@ async def get_course_status(session:ClientSession,course:str):
         return (await resp.json())[0]
 
 async def main(course_list:list[str]):
-    # course_list = [
-    #     'ET3105302','ET3414701','ET3812301','FE1471701','FE1581701','FE2031702','PE112A053','PE113A053','TCG072301','TCG082301','TCG094301'
-    # ]
-    async with ClientSession() as session:
+    async with ClientSession(connector=TCPConnector(ssl=False)) as session:
         tasks = map(lambda x:get_course_status(session,x),course_list)
         courses = await gather(*tasks)
     for x in courses:
@@ -27,7 +24,7 @@ async def main(course_list:list[str]):
         'choise_rate',
         'CourseTeacher',
         'CourseName']
-    table = ColorTable(theme=Themes.OCEAN)
+    table = PrettyTable()
     table.field_names = [
         '索引',
         '課程代碼',
@@ -49,8 +46,8 @@ if __name__ == '__main__':
         else:
             print('將志願清單複製到網址貼上後，再複製貼上到這個程式，即可自動分析課表:')
             s = input()
-        
-        CourseNo_list = list(set(findall('[A-Z]{2}[A-Z0-9]{7}',s)))
+        pattern = '[A-Z]{2}[G|1-9]{1}[A|0-9]{3}[0|1|3|5|7]{1}[0-9]{2}'
+        CourseNo_list = list(set(findall(pattern,s)))
         CourseNo_list.sort()
         print(CourseNo_list)
         run(main(CourseNo_list))
