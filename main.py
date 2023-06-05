@@ -1,11 +1,8 @@
 from aiohttp import ClientSession, TCPConnector
 from asyncio import run, gather
-from aiohttp import ClientSession,TCPConnector
-from asyncio import run,gather
 from prettytable import PrettyTable
 from sys import argv
 from re import findall
-from math import comb
 
 
 async def get_course_status(session: ClientSession, course: str):
@@ -23,8 +20,7 @@ async def main(course_list: list[str]):
         all = x['AllStudent']
         restrict = int(x['Restrict2'])
         if all > restrict:
-            x['choise_rate'] = int(round(
-                comb(all-1, restrict-1)/comb(all, restrict), 2)*100)
+            x['choise_rate'] = int(round(restrict/all, 2)*100)
         else:
             x['choise_rate'] = 100
     courses.sort(key=lambda x: x['choise_rate'])
@@ -67,6 +63,6 @@ if __name__ == '__main__':
         print('請檢查檔案路徑是否正確')
     except Exception as e:
         print('發生錯誤', e.args, '請回報給開發者', sep='\n')
-    input("按下 enter 結束執行")
+    #input("按下 enter 結束執行")
 
 # python -m nuitka --assume-yes-for-downloads --onefile --standalone --output-dir=build  --static-libpython=no ttes
