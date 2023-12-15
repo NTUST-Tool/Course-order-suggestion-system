@@ -6,7 +6,7 @@ from re import findall
 
 
 async def get_course_status(session: ClientSession, course: str):
-    data = {"Semester": '1121', "CourseNo": course, "Language": "zh"}
+    data = {"Semester": '1122', "CourseNo": course, "Language": "zh"}
     api = 'https://querycourse.ntust.edu.tw/querycourse/api/courses'
     async with session.post(api, data=data) as resp:
         return (await resp.json())[0]
