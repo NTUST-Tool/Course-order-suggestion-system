@@ -30,15 +30,19 @@ async def main(course_list: list[str]):
         all = x["AllStudent"]
         restrict = int(x["Restrict2"])
         if all > restrict:
-            x["choise_rate"] = int(round(restrict / all, 2) * 100)
+            x["sucess_rate"] = int(round(restrict / all, 2) * 100)
         else:
-            x["choise_rate"] = 100
-    courses.sort(key=lambda x: x["choise_rate"])
+            x["sucess_rate"] = 100
+        x["choice_rate"] = all / restrict
+    courses.sort(key=lambda x: (x["sucess_rate"], 1 / x["choice_rate"]))
+    for x in courses:
+        x['choice_rate'] = round(x["choice_rate"],2)
     tag = [
         "CourseNo",
         "AllStudent",
         "Restrict2",
-        "choise_rate",
+        "sucess_rate",
+        "choice_rate",
         "CourseTeacher",
         "CourseName",
     ]
@@ -50,11 +54,12 @@ async def main(course_list: list[str]):
         "選課人數",
         "人數上限",
         "選上機率(%)",
+        "選課人數/人數上限",
         "授課老師",
         "課程名稱",
     ]
     for row, x in enumerate(courses):
-        table.add_row([Semester, row + 1, *(x[y] for y in tag)])
+        table.add_row([Semester, row + 1, *((x[y] if y in x else "NA") for y in tag)])
     print(table)
 
 
@@ -65,17 +70,19 @@ if __name__ == "__main__":
             with open(argv[-1], "r", encoding="utf-8") as f:
                 s = f.read()
         else:
-            print("將志願清單複製到網址貼上後，再複製貼上到這個程式，即可自動分析課表:")
+            print(
+                "將志願清單複製到網址欄貼上後，再複製貼上到這個程式，即可自動分析課表:"
+            )
             s = input()
         pattern = "[A-Z]{2}[G|1-9]{1}[A|0-9]{3}[0|1|3|5|7]{1}[0-9]{2}"
         CourseNo_list = list(set(findall(pattern, s)))
         CourseNo_list.sort()
-        print(CourseNo_list)
+        print("你選了：", *CourseNo_list)
         run(main(CourseNo_list))
     except FileNotFoundError:
         print("請檢查檔案路徑是否正確")
-    except Exception as e:
-        print("發生錯誤", e.args, "請回報給開發者", sep="\n")
+    # except Exception as e:
+    #     print("發生錯誤", e.args, "請回報給開發者", sep="\n")
     input("按下 enter 結束執行")
 
 # python -m nuitka --assume-yes-for-downloads --onefile --standalone --output-dir=build  --static-libpython=no ttes
