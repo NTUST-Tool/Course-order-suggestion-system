@@ -27,7 +27,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install -r requirements.txt
+          pip install imageio -r requirements.txt
 
       # - name: Install Dependencies (Linux)
       #   if: runner.os == 'Linux'
