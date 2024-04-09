@@ -43,7 +43,9 @@ jobs:
           standalone: true
           output-dir: build
           static-libpython: no
-          windows-icon-from-ico: resources/app.ico
+          windows-icon-from-ico: resources/app.png
+          macos-app-icon: resources/app.png
+          linux-icon: resources/app.png
 
 
       - name: Upload Artifacts
