@@ -6,7 +6,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
       
     runs-on: ${{ matrix.os }}
     
@@ -17,7 +17,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          python-version: '3.12' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
           cache: 'pip'
           cache-dependency-path: |
@@ -27,29 +27,31 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Install Dependencies (Windows)
-        if: runner.os == 'Windows'
-        shell: powershell
-        run: |
-          $github_action_path = "${{ github.action_path }}"
-          # Fixes: C:\actions-runner\_work\repo\repo\./.github/actions/action-name
-          $github_action_path = $github_action_path -replace "\\\./", "\"
-          $github_action_path = $github_action_path -replace "/", "\"
+      # - name: Install Dependencies (Windows)
+      #   if: runner.os == 'Windows'
+      #   shell: powershell
+      #   run: |
+      #     $github_action_path = "${{ github.action_path }}"
+      #     # Fixes: C:\actions-runner\_work\repo\repo\./.github/actions/action-name
+      #     $github_action_path = $github_action_path -replace "\\\./", "\"
+      #     $github_action_path = $github_action_path -replace "/", "\"
 
-      - name: Install Dependencies (Linux)
-        if: runner.os == 'Linux'
-        shell: bash
-        run: sudo apt-get install -y libfuse2
+      # - name: Install Dependencies (Linux)
+      #   if: runner.os == 'Linux'
+      #   shell: bash
+      #   run: sudo apt-get install -y libfuse2
 
-      - name: Build Executable (macOS and Linux)
-        if: ${{ runner.os == 'macOS' || runner.os == 'Linux' }}
-        shell: bash
-        run: python -m nuitka --assume-yes-for-downloads --onefile --standalone --output-dir=build main.py
+      - name: Build Executable
+        uses: Nuitka/Nuitka-Action@main
+        with:
+          nuitka-version: main
+          script-name: main.py
+          onefile: true
+          standalone: true
+          output-dir: build
+          static-libpython: no
+          windows-icon-from-ico: resources/app.ico
 
-      - name: Build Executable (Windows)
-        if: runner.os == 'Windows'
-        shell: bash
-        run: python -m nuitka --assume-yes-for-downloads --onefile --standalone --output-dir=build --static-libpython=no --windows-icon-from-ico=resources/app.ico main.py
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
