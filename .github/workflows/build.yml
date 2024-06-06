@@ -1,4 +1,4 @@
-name: build_win
+name: build
 
 on:
   push:
@@ -29,11 +29,6 @@ jobs:
         run: |
           pip install imageio -r requirements.txt
 
-      # - name: Install Dependencies (Linux)
-      #   if: runner.os == 'Linux'
-      #   shell: bash
-      #   run: sudo apt-get install -y libfuse2
-
       - name: Build Executable
         uses: Nuitka/Nuitka-Action@main
         with:
@@ -46,7 +41,6 @@ jobs:
           windows-icon-from-ico: resources/app.png
           macos-app-icon: resources/app.png
           linux-icon: resources/app.png
-
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
