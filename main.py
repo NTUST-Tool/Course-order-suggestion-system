@@ -81,8 +81,7 @@ if __name__ == "__main__":
         run(main(CourseNo_list))
     except FileNotFoundError:
         print("請檢查檔案路徑是否正確")
-    # except Exception as e:
-    #     print("發生錯誤", e.args, "請回報給開發者", sep="\n")
+    except Exception as e:
+        print("發生錯誤", e.args, "請回報給開發者", sep="\n")
     input("按下 enter 結束執行")
 
-# python -m nuitka --assume-yes-for-downloads --onefile --standalone --output-dir=build  --static-libpython=no ttes
