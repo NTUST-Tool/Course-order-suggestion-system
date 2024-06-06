@@ -1,5 +1,2 @@
 prettytable
 aiohttp
-ordered-set
-zstandard
-nuitka
