@@ -19,4 +19,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }} Build
-          path: target/release/Course_order_suggestion_system*
+          path: |
+            target/release/Course-order-suggestion
+            target/release/Course-order-suggestion.exe
