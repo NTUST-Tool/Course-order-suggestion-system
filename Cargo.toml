@@ -1,7 +1,16 @@
 [package]
-name = "Course_order_suggestion_system"
-version = "0.1.0"
+name = "Course-order-suggestion-system"
+description = "A course order suggestion system for NTUST"
+version = "0.1.9"
 edition = "2021"
+
+[package.metadata.winresource]
+OriginalFilename = "選課志願序推薦系統.exe"
+LegalCopyright = "Copyright © 2024 NTUST-Tool"
+
+
+[build-dependencies]
+winresource = "0.1"
 
 [dependencies]
 reqwest = { version = "0.12.4", features = ["json"] }
@@ -13,5 +22,5 @@ tabled = "0.15.0"
 regex = "1.10.4"
 
 [[bin]]
-name = "Course_order_suggestion_system"
+name = "Course-order-suggestion"
 path = "src/main.rs"

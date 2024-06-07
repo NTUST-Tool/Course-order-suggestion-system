@@ -12,7 +12,7 @@ use tabled::{
 };
 
 #[derive(Parser, Debug)]
-#[command(author, about, long_about)]
+#[command(author, about="台灣科技大學\n選課志願序推薦系統", long_about)]
 struct Args {
     /// 檔案名稱
     file_path: String,
