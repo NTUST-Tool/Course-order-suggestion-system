@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    name: build app
+    name: build ${{ matrix.os }} app
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
