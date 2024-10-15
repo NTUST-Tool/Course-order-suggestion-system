@@ -125,15 +125,20 @@ async fn get_course_info(
     );
     let res = client.post(url).json(&body).send().await?;
     let json_array = res.json::<Value>().await?;
-    let mut data = from_value::<Course>(json_array[0].clone()).unwrap();
-    data.choice_rate =
-        (data.student_count as f32 / (data.student_limit).parse::<f32>().unwrap()) as f32;
-    data.choice_rate = round_digits(data.choice_rate, 2);
+    let json_object = &json_array[0];
+    let mut data = from_value::<Course>(json_object.clone()).unwrap();
+
+    let raw_choice_rate = data.student_count as f32 / (data.student_limit).parse::<f32>().unwrap();
+
+    data.choice_rate = round_digits(raw_choice_rate, 2);
+
+    if data.choice_rate > 0.0 {
     data.sucess_rate = 100.0 / data.choice_rate;
     if data.sucess_rate > 100.0 {
         data.sucess_rate = 100.0;
     }
     data.sucess_rate = round_digits(data.sucess_rate, 2);
+    }
     Ok(data)
 }
 
