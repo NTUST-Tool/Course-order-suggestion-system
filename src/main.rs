@@ -85,8 +85,8 @@ async fn get_course_info(
     let body = json!({
         "Semester": semester,
         "CourseNo": course_id,
-        "Language": "zh"}
-    );
+        "Language": "zh"
+    });
     let res = client.post(url).json(&body).send().await?;
     let json_array = res.json::<Value>().await?;
     let json_object = &json_array[0];
@@ -146,10 +146,7 @@ async fn main() {
         let len = unsafe_courses.len() + 1;
         table
             .with(Concat::vertical(safe_table))
-            .with(
-                Modify::new(Cell::new(len, 0))
-                    .with("以下課程皆會選上，無須考慮位置"),
-            )
+            .with(Modify::new(Cell::new(len, 0)).with("以下課程皆會選上，無須考慮位置"))
             .modify((len, 0), Span::column(7));
     }
 

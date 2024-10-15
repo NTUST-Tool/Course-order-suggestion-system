@@ -13,15 +13,25 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
 
-      - run: cargo build --release
+      - name: setup on non-Linux
+        uses: actions-rust-lang/setup-rust-toolchain@v1
         if: matrix.os != 'ubuntu-latest'
 
-      - if: matrix.os == 'ubuntu-latest'
+      - name: setup on Linux
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          target: x86_64-unknown-linux-musl
+
+      - name: build on non-Linux
+        if: matrix.os != 'ubuntu-latest'
+        run: cargo build --release
+
+      - name: build on Linux
+        if: matrix.os == 'ubuntu-latest'
         run: |
-          sudo apt install musl-tools
-          rustup target add x86_64-unknown-linux-musl
+          sudo apt install -y musl-tools
           cargo build --release --target x86_64-unknown-linux-musl
 
 
