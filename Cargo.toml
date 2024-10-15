@@ -1,7 +1,7 @@
 [package]
 name = "Course-order-suggestion-system"
 description = "A course order suggestion system for NTUST"
-version = "0.1.9"
+version = "1.0.0"
 edition = "2021"
 
 [package.metadata.winresource]
