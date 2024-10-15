@@ -7,14 +7,16 @@ use std::io;
 use std::io::prelude::*;
 use std::process::exit;
 use tabled::{
-    settings::{object::Segment, Alignment, Panel, Style},
+    settings::{
+        object::{Cell, Segment},
+        Alignment, Concat, Modify, Panel, Span, Style,
+    },
     Table, Tabled,
 };
 
 #[derive(Parser, Debug)]
-#[command(author, about="台灣科技大學\n選課志願序推薦系統", long_about)]
+#[command(author, about = "台灣科技大學\n選課志願序推薦系統", long_about)]
 struct Args {
-    /// 檔案名稱
     file_path: String,
 }
 
@@ -157,20 +159,37 @@ async fn main() {
     }
     let file = std::fs::read_to_string(&file_path).unwrap();
     let re = Regex::new(r"[A-Z]{2}[G|1-9]{1}[AB|0-9]{3}[0|1|3|5|7]{1}[0-9]{2}").unwrap();
-    let course_ids: Vec<&str> = re.find_iter(&file).map(|m| m.as_str()).collect();
+    let course_ids: Vec<_> = re.find_iter(&file).map(|m| m.as_str()).collect();
 
     let client = Client::new();
 
     let semester = get_semester(&client).await.unwrap();
 
-    let mut courses = Vec::new();
+    let mut unsafe_courses = Vec::new();
+    let mut safe_courses = Vec::new();
     for course in course_ids.iter() {
         let course_info = get_course_info(&client, &semester, course).await.unwrap();
-        courses.push(course_info);
+        if course_info.sucess_rate == 100.0 {
+            safe_courses.push(course_info);
+        } else {
+            unsafe_courses.push(course_info);
     }
-    courses.sort_by(|a, b| b.choice_rate.partial_cmp(&a.choice_rate).unwrap());
+    }
+    unsafe_courses.sort_by(|a, b| b.choice_rate.partial_cmp(&a.choice_rate).unwrap());
 
-    let mut table = Table::new(&courses);
+    let safe_table = Table::new(&safe_courses);
+    let mut table = Table::new(&unsafe_courses);
+
+    if safe_courses.len() > 0 {
+        let len = unsafe_courses.len() + 1;
+        table
+            .with(Concat::vertical(safe_table))
+            .with(
+                Modify::new(Cell::new(len, 0))
+                    .with("以下課程皆會選上，無須考慮位置"),
+            )
+            .modify((len, 0), Span::column(7));
+    }
 
     table
         .modify(Segment::all(), Alignment::center())
