@@ -14,7 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
+
       - run: cargo build --release
+        if: matrix.os != 'ubuntu-latest'
+
+      - if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt install musl-tools
+          rustup target add x86_64-unknown-linux-musl
+          cargo build --release --target x86_64-unknown-linux-musl
+
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
