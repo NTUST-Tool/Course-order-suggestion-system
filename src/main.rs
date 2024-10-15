@@ -43,44 +43,6 @@ struct Course {
     #[serde(default)]
     #[tabled(rename = "選課比例")]
     choice_rate: f32,
-    // #[serde(alias = "AbroadPeople")]
-    // abroad_people: i32,
-    // #[serde(alias = "AllYear")]
-    // all_year: String,
-    // #[serde(alias = "ChooseStudent")]
-    // choose_student: i32,
-    // #[serde(alias = "ClassRoomNo")]
-    // class_room_no: Option<String>,
-    // #[serde(alias = "Contents")]
-    // contents: String,
-    // #[serde(alias = "CourseTimes")]
-    // course_times: String,
-    // #[serde(alias = "CreditPoint")]
-    // credit_point: String,
-    // #[serde(alias = "Dimension")]
-    // dimension: String,
-    // #[serde(alias = "NTNURestrict")]
-    // ntnu_restrict: String,
-    // #[serde(alias = "NTNU_People")]
-    // ntnu_people: i32,
-    // #[serde(alias = "NTURestrict")]
-    // ntu_restrict: String,
-    // #[serde(alias = "NTU_People")]
-    // ntu_people: i32,
-    // #[serde(alias = "Node")]
-    // node: String,
-    // #[serde(alias = "PracticalTimes")]
-    // practical_times: String,
-    // #[serde(alias = "RequireOption")]
-    // require_option: String,
-    // #[serde(alias = "Restrict1")]
-    // restrict1: String,
-    // #[serde(alias = "Semester")]
-    // semester: String,
-    // #[serde(alias = "ThreeNode")]
-    // three_node: Option<String>,
-    // #[serde(alias = "ThreeStudent")]
-    // three_student: i32,
 }
 
 fn round_digits(num: f32, digits: i32) -> f32 {
@@ -135,11 +97,11 @@ async fn get_course_info(
     data.choice_rate = round_digits(raw_choice_rate, 2);
 
     if data.choice_rate > 0.0 {
-    data.sucess_rate = 100.0 / data.choice_rate;
-    if data.sucess_rate > 100.0 {
-        data.sucess_rate = 100.0;
-    }
-    data.sucess_rate = round_digits(data.sucess_rate, 2);
+        data.sucess_rate = 100.0 / data.choice_rate;
+        if data.sucess_rate > 100.0 {
+            data.sucess_rate = 100.0;
+        }
+        data.sucess_rate = round_digits(data.sucess_rate, 2);
     }
     Ok(data)
 }
@@ -173,7 +135,7 @@ async fn main() {
             safe_courses.push(course_info);
         } else {
             unsafe_courses.push(course_info);
-    }
+        }
     }
     unsafe_courses.sort_by(|a, b| b.choice_rate.partial_cmp(&a.choice_rate).unwrap());
 
